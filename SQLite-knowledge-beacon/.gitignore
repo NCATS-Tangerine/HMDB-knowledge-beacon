@@ -14,4 +14,3 @@ server.pid
 *.eml
 /dist/
 .cache
-SQLite-knowledge-beacon/HMDB-KS.db
