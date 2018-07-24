@@ -1,0 +1,24 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /api                        controllers.ApiDocController.api
+
+
+#Functions for Concepts API
+GET     //concepts/:conceptId                     controllers.ConceptsApiController.getConceptDetails(conceptId: String)
+GET     //concepts                     controllers.ConceptsApiController.getConcepts()
+GET     //exactmatches                     controllers.ConceptsApiController.getExactMatchesToConceptList()
+
+#Functions for Metadata API
+GET     //categories                     controllers.MetadataApiController.getConceptCategories()
+GET     //kmap                     controllers.MetadataApiController.getKnowledgeMap()
+GET     //predicates                     controllers.MetadataApiController.getPredicates()
+
+#Functions for Statements API
+GET     //statements/:statementId                     controllers.StatementsApiController.getStatementDetails(statementId: String)
+GET     //statements                     controllers.StatementsApiController.getStatements()
+
+# Map static resources from the /public folder to the /assets URL path
+GET /assets/*file           controllers.Assets.at(file)
+GET /versionedAssets/*file  controllers.Assets.versioned(file)
