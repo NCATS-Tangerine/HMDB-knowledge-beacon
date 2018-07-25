@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import apimodels.BeaconConceptDetail;
 import apimodels.BeaconConceptWithDetails;
@@ -94,7 +95,7 @@ public class BeaconConceptDetailsQuery {
 				beaconConcept.setUri(res.getString("URI"));
 				beaconConcept.setName(res.getString("NAME"));
 				beaconConcept.setSymbol(res.getString("SYMBOL"));
-				beaconConcept.setCategory(res.getString("CATEGORY"));
+				beaconConcept.setCategories(Arrays.asList(res.getString("CATEGORY")));
 				beaconConcept.setDescription(res.getString("DESCRIPTION"));
 				ArrayList<String> synonyms = synonyms(res.getInt("BEACON_CONCEPT_ID"), con);
 				beaconConcept.setSynonyms(synonyms);

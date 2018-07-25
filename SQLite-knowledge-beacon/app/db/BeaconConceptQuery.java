@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import apimodels.BeaconConcept;
@@ -99,7 +100,7 @@ public class BeaconConceptQuery {
 		if (res.next()) {
 			beaconConcept.setId(res.getString("ID"));
 			beaconConcept.setName(res.getString("NAME"));
-			beaconConcept.setCategory(res.getString("CATEGORY"));
+			beaconConcept.setCategories(Arrays.asList(res.getString("CATEGORY")));
 			beaconConcept.setDescription(res.getString("DESCRIPTION"));
 			return beaconConcept;
 		} else

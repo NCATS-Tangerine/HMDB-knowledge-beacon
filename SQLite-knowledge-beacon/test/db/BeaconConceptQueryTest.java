@@ -15,11 +15,11 @@ public class BeaconConceptQueryTest {
 	public void testConceptSql() throws Exception {
 		Connection c = DBconnection.getConnection();
 		BeaconConcept concept = BeaconConceptQuery.getConcept(1, c);
-		assertEquals(concept.getCategory(),"metabolite");
+		assertEquals(concept.getCategories().get(0),"metabolite");
 		concept = BeaconConceptQuery.getConcept(2, c);
-		assertEquals(concept.getCategory(),"disease");
+		assertEquals(concept.getCategories().get(0),"disease");
 		concept = BeaconConceptQuery.getConcept(6, c);
-		assertEquals(concept.getCategory(),"pathway");
+		assertEquals(concept.getCategories().get(0),"pathway");
 	}
 
 
