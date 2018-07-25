@@ -1,27 +1,23 @@
 package controllers;
 
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
+
 import apimodels.BeaconStatement;
 import apimodels.BeaconStatementWithDetails;
-
-import play.mvc.Http;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.io.FileInputStream;
-import javax.validation.constraints.*;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-05-25T14:12:37.234Z")
+import db.BeaconStatementDetailsQuery;
+import db.BeaconStatementQuery;
 
 public class StatementsApiControllerImp implements StatementsApiControllerImpInterface {
     @Override
     public BeaconStatementWithDetails getStatementDetails(String statementId, List<String> keywords, Integer size) throws Exception {
-        //Do your magic!!!
-        return new BeaconStatementWithDetails();
+        return BeaconStatementDetailsQuery.execute(statementId, keywords, size==null?Integer.MAX_VALUE:size);
     }
 
     @Override
     public List<BeaconStatement> getStatements( @NotNull List<String> s, String edgeLabel, String relation, List<String> t, List<String> keywords, List<String> categories, Integer size) throws Exception {
-        //Do your magic!!!
-        return new ArrayList<BeaconStatement>();
+    	return BeaconStatementQuery.execute(s, relation, t, keywords, categories, size==null?Integer.MAX_VALUE:size);
     }
 
 }

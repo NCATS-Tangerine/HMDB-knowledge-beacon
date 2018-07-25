@@ -13,8 +13,8 @@
       "url" : "http://opensource.org/licenses/MIT"
     }
   },
-  "host" : "rkb.ncats.io",
-  "basePath" : "/",
+  "host" : "translator.ncats.io",
+  "basePath" : "/hmdb-knowledge-beacon",
   "tags" : [ {
     "name" : "metadata",
     "description" : "Queries about global characteristics of the knowledge source"
@@ -364,7 +364,7 @@
         "parameters" : [ {
           "name" : "statementId",
           "in" : "path",
-          "description" : "(url-encoded) CURIE identifier of the concept-relationship statement (\"assertion\", \"claim\") for which associated evidence is sought\n",
+          "description" : "id of a statement for which additional information is sought\n",
           "required" : true,
           "type" : "string"
         }, {

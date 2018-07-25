@@ -40,6 +40,7 @@ public class ErrorHandler extends DefaultHttpErrorHandler {
     protected void logServerError(RequestHeader request, UsefulException usefulException) {
         //Since the error is already handled, we don't want to print anything on the console
         //But if you want to have the error printed in the console, just delete this override
+    	usefulException.printStackTrace();
     }
 
     private Result handleExceptions(Throwable t) {
