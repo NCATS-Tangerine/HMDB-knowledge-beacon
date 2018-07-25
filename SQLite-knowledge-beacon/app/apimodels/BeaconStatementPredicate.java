@@ -8,7 +8,7 @@ import javax.validation.constraints.*;
 /**
  * BeaconStatementPredicate
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-05-25T14:12:37.234Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-07-24T21:10:45.082Z")
 
 @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
 public class BeaconStatementPredicate   {

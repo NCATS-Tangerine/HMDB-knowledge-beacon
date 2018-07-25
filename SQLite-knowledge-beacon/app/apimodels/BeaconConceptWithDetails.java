@@ -11,7 +11,7 @@ import javax.validation.constraints.*;
 /**
  * BeaconConceptWithDetails
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-05-25T14:12:37.234Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-07-24T21:10:45.082Z")
 
 @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
 public class BeaconConceptWithDetails   {
@@ -27,8 +27,8 @@ public class BeaconConceptWithDetails   {
   @JsonProperty("symbol")
   private String symbol = null;
 
-  @JsonProperty("category")
-  private String category = null;
+  @JsonProperty("categories")
+  private List<String> categories = null;
 
   @JsonProperty("description")
   private String description = null;
@@ -110,21 +110,29 @@ public class BeaconConceptWithDetails   {
     this.symbol = symbol;
   }
 
-  public BeaconConceptWithDetails category(String category) {
-    this.category = category;
+  public BeaconConceptWithDetails categories(List<String> categories) {
+    this.categories = categories;
+    return this;
+  }
+
+  public BeaconConceptWithDetails addCategoriesItem(String categoriesItem) {
+    if (categories == null) {
+      categories = new ArrayList<>();
+    }
+    categories.add(categoriesItem);
     return this;
   }
 
    /**
    * concept semantic type 'category'. Should be specified from the [Biolink Model](https://biolink.github.io/biolink-model). 
-   * @return category
+   * @return categories
   **/
-    public String getCategory() {
-    return category;
+    public List<String> getCategories() {
+    return categories;
   }
 
-  public void setCategory(String category) {
-    this.category = category;
+  public void setCategories(List<String> categories) {
+    this.categories = categories;
   }
 
   public BeaconConceptWithDetails description(String description) {
@@ -234,7 +242,7 @@ public class BeaconConceptWithDetails   {
         Objects.equals(uri, beaconConceptWithDetails.uri) &&
         Objects.equals(name, beaconConceptWithDetails.name) &&
         Objects.equals(symbol, beaconConceptWithDetails.symbol) &&
-        Objects.equals(category, beaconConceptWithDetails.category) &&
+        Objects.equals(categories, beaconConceptWithDetails.categories) &&
         Objects.equals(description, beaconConceptWithDetails.description) &&
         Objects.equals(synonyms, beaconConceptWithDetails.synonyms) &&
         Objects.equals(exactMatches, beaconConceptWithDetails.exactMatches) &&
@@ -243,7 +251,7 @@ public class BeaconConceptWithDetails   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, uri, name, symbol, category, description, synonyms, exactMatches, details);
+    return Objects.hash(id, uri, name, symbol, categories, description, synonyms, exactMatches, details);
   }
 
   @SuppressWarnings("StringBufferReplaceableByString")
@@ -256,7 +264,7 @@ public class BeaconConceptWithDetails   {
     sb.append("    uri: ").append(toIndentedString(uri)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    symbol: ").append(toIndentedString(symbol)).append("\n");
-    sb.append("    category: ").append(toIndentedString(category)).append("\n");
+    sb.append("    categories: ").append(toIndentedString(categories)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    synonyms: ").append(toIndentedString(synonyms)).append("\n");
     sb.append("    exactMatches: ").append(toIndentedString(exactMatches)).append("\n");

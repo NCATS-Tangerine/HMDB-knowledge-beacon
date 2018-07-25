@@ -1,5 +1,7 @@
 package apimodels;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.fasterxml.jackson.annotation.*;
 import java.util.Set;
 import javax.validation.*;
@@ -8,7 +10,7 @@ import javax.validation.constraints.*;
 /**
  * BeaconStatementObject
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-05-25T14:12:37.234Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-07-24T21:10:45.082Z")
 
 @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
 public class BeaconStatementObject   {
@@ -18,8 +20,8 @@ public class BeaconStatementObject   {
   @JsonProperty("name")
   private String name = null;
 
-  @JsonProperty("category")
-  private String category = null;
+  @JsonProperty("categories")
+  private List<String> categories = null;
 
   public BeaconStatementObject id(String id) {
     this.id = id;
@@ -55,21 +57,29 @@ public class BeaconStatementObject   {
     this.name = name;
   }
 
-  public BeaconStatementObject category(String category) {
-    this.category = category;
+  public BeaconStatementObject categories(List<String> categories) {
+    this.categories = categories;
+    return this;
+  }
+
+  public BeaconStatementObject addCategoriesItem(String categoriesItem) {
+    if (categories == null) {
+      categories = new ArrayList<>();
+    }
+    categories.add(categoriesItem);
     return this;
   }
 
    /**
    * a semantic group for the object concept (specified as a code gene, pathway, disease, etc. - see [Biolink Model](https://biolink.github.io/biolink-model) for the full list of categories) 
-   * @return category
+   * @return categories
   **/
-    public String getCategory() {
-    return category;
+    public List<String> getCategories() {
+    return categories;
   }
 
-  public void setCategory(String category) {
-    this.category = category;
+  public void setCategories(List<String> categories) {
+    this.categories = categories;
   }
 
 
@@ -84,12 +94,12 @@ public class BeaconStatementObject   {
     BeaconStatementObject beaconStatementObject = (BeaconStatementObject) o;
     return Objects.equals(id, beaconStatementObject.id) &&
         Objects.equals(name, beaconStatementObject.name) &&
-        Objects.equals(category, beaconStatementObject.category);
+        Objects.equals(categories, beaconStatementObject.categories);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, category);
+    return Objects.hash(id, name, categories);
   }
 
   @SuppressWarnings("StringBufferReplaceableByString")
@@ -100,7 +110,7 @@ public class BeaconStatementObject   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    category: ").append(toIndentedString(category)).append("\n");
+    sb.append("    categories: ").append(toIndentedString(categories)).append("\n");
     sb.append("}");
     return sb.toString();
   }
