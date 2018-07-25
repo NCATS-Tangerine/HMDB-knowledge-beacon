@@ -8,7 +8,7 @@ import javax.validation.constraints.*;
 /**
  * BeaconKnowledgeMapPredicate
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-05-25T14:12:37.234Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-07-24T21:10:45.082Z")
 
 @SuppressWarnings({"UnusedReturnValue", "WeakerAccess"})
 public class BeaconKnowledgeMapPredicate   {
@@ -17,6 +17,9 @@ public class BeaconKnowledgeMapPredicate   {
 
   @JsonProperty("relation")
   private String relation = null;
+
+  @JsonProperty("negated")
+  private Boolean negated = null;
 
   public BeaconKnowledgeMapPredicate edgeLabel(String edgeLabel) {
     this.edgeLabel = edgeLabel;
@@ -52,6 +55,23 @@ public class BeaconKnowledgeMapPredicate   {
     this.relation = relation;
   }
 
+  public BeaconKnowledgeMapPredicate negated(Boolean negated) {
+    this.negated = negated;
+    return this;
+  }
+
+   /**
+   * Indicates whether edge statement is negated (i.e. is not true) 
+   * @return negated
+  **/
+    public Boolean isNegated() {
+    return negated;
+  }
+
+  public void setNegated(Boolean negated) {
+    this.negated = negated;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -63,12 +83,13 @@ public class BeaconKnowledgeMapPredicate   {
     }
     BeaconKnowledgeMapPredicate beaconKnowledgeMapPredicate = (BeaconKnowledgeMapPredicate) o;
     return Objects.equals(edgeLabel, beaconKnowledgeMapPredicate.edgeLabel) &&
-        Objects.equals(relation, beaconKnowledgeMapPredicate.relation);
+        Objects.equals(relation, beaconKnowledgeMapPredicate.relation) &&
+        Objects.equals(negated, beaconKnowledgeMapPredicate.negated);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(edgeLabel, relation);
+    return Objects.hash(edgeLabel, relation, negated);
   }
 
   @SuppressWarnings("StringBufferReplaceableByString")
@@ -79,6 +100,7 @@ public class BeaconKnowledgeMapPredicate   {
     
     sb.append("    edgeLabel: ").append(toIndentedString(edgeLabel)).append("\n");
     sb.append("    relation: ").append(toIndentedString(relation)).append("\n");
+    sb.append("    negated: ").append(toIndentedString(negated)).append("\n");
     sb.append("}");
     return sb.toString();
   }
