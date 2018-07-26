@@ -20,7 +20,7 @@ public class BeaconKnowledgeMapQuery {
 
 	
 	private static String knowledgeMapQuery = 
-			"SELECT SUBJECT_CATEGORY.CATEGORY AS SUBJECT_CATEGORY, BEACON_PREDICATE.EDGE_LABEL, BEACON_PREDICATE.RELATION, BEACON_PREDICATE.DEFINITION, "
+			"SELECT SUBJECT_CATEGORY.CATEGORY AS SUBJECT_CATEGORY, BEACON_PREDICATE.EDGE_LABEL, BEACON_PREDICATE.RELATION, BEACON_STATEMENT.NEGATED, BEACON_PREDICATE.DEFINITION, "
 			+ "OBJECT_CATEGORY.CATEGORY AS OBJECT_CATEGORY, COUNT(BEACON_STATEMENT.BEACON_STATEMENT_ID) AS FREQUENCY "
 			+ "FROM BEACON_STATEMENT " 
 			+ "INNER JOIN BEACON_PREDICATE "
@@ -33,7 +33,7 @@ public class BeaconKnowledgeMapQuery {
 			+ "  ON SUBJECT.BEACON_CONCEPT_ID=BEACON_STATEMENT.SUBJECT_CONCEPT_ID "
 			+ "INNER JOIN BEACON_CONCEPT_CATEGORY SUBJECT_CATEGORY "
 			+ "  ON SUBJECT_CATEGORY.BEACON_CONCEPT_CATEGORY_ID = SUBJECT.BEACON_CONCEPT_CATEGORY_ID "
-			+ "GROUP BY SUBJECT_CATEGORY, EDGE_LABEL, RELATION, OBJECT_CATEGORY";
+			+ "GROUP BY SUBJECT_CATEGORY, EDGE_LABEL, RELATION, NEGATED, DEFINITION, OBJECT_CATEGORY";
 
 	public static ArrayList<BeaconKnowledgeMapStatement> execute() throws SQLException, ClassNotFoundException{
 		Connection con = null;
@@ -48,6 +48,7 @@ public class BeaconKnowledgeMapQuery {
 				BeaconKnowledgeMapPredicate predicate = new BeaconKnowledgeMapPredicate();
 				predicate.setEdgeLabel(res.getString("EDGE_LABEL"));
 				predicate.setRelation(res.getString("RELATION"));
+				predicate.setNegated(res.getBoolean("NEGATED"));
 				BeaconKnowledgeMapObject object = new BeaconKnowledgeMapObject();
 				object.setCategory(res.getString("OBJECT_CATEGORY"));
 				BeaconKnowledgeMapStatement statement = new BeaconKnowledgeMapStatement();

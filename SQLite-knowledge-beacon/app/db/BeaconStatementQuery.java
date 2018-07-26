@@ -1,6 +1,7 @@
 package db;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -110,7 +111,7 @@ public class BeaconStatementQuery {
 		BeaconStatementObject object = new BeaconStatementObject();
 		object.setId(res.getString("OBJECT_ID"));
 		object.setName(res.getString("OBJECT_NAME"));
-		object.setCategory(res.getString("OBJECT_CATEGORY"));
+		object.setCategories(Arrays.asList(res.getString("OBJECT_CATEGORY")));
 		
 		BeaconStatementPredicate predicate = new BeaconStatementPredicate();
 		predicate.setEdgeLabel(res.getString("EDGE_LABEL"));
@@ -120,7 +121,7 @@ public class BeaconStatementQuery {
 		BeaconStatementSubject subject = new BeaconStatementSubject();
 		subject.setId(res.getString("SUBJECT_ID"));
 		subject.setName(res.getString("SUBJECT_NAME"));
-		subject.setCategory(res.getString("SUBJECT_CATEGORY"));
+		subject.setCategories(Arrays.asList(res.getString("SUBJECT_CATEGORY")));
 		
 		BeaconStatement statement = new BeaconStatement();
 		statement.setId(""+res.getInt("BEACON_STATEMENT_ID"));
