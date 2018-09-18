@@ -1,12 +1,12 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "This is the Translator Knowledge Beacon web service application programming interface (API) wrapping the nDex Bio (ndexbio.org) bioinformatics graph data archive..\n",
+    "description" : "This is the Translator Knowledge Beacon web service application programming interface (API) wrapping the Human Metabolome Database (www.hmdb.ca).\n",
     "version" : "1.1.1",
-    "title" : "nDex Bio Translator Knowledge Beacon API",
+    "title" : "HMDB Translator Knowledge Beacon API",
     "contact" : {
-      "url" : "http://starinformatics.com",
-      "email" : "richard@starinformatics.com"
+      "url" : "http://www.broadinstitute.org",
+      "email" : "vdancik@broadinstitute.org"
     },
     "license" : {
       "name" : "MIT License",
