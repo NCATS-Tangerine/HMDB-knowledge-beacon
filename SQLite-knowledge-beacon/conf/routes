@@ -3,6 +3,7 @@
 # ~~~~
 
 GET     /api                        controllers.ApiDocController.api
+GET     /                           controllers.ApiDocController.api
 
 
 #Functions for Concepts API
