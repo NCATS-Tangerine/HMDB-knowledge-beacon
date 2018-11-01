@@ -12,8 +12,8 @@ import javax.validation.constraints.*;
 
 @SuppressWarnings("RedundantThrows")
 public interface StatementsApiControllerImpInterface {
-    BeaconStatementWithDetails getStatementDetails(String statementId, List<String> keywords, Integer size) throws Exception;
+    BeaconStatementWithDetails getStatementDetails(String statementId, List<String> keywords, Integer offset, Integer size) throws Exception;
 
-    List<BeaconStatement> getStatements( @NotNull List<String> s, String edgeLabel, String relation, List<String> t, List<String> keywords, List<String> categories, Integer size) throws Exception;
+    List<BeaconStatement> getStatements(List<String> s, List<String> sKeywords, List<String> sCategories, String edgeLabel, String relation, List<String> t, List<String> tKeywords, List<String> tCategories, Integer offset, Integer size) throws Exception;
 
 }

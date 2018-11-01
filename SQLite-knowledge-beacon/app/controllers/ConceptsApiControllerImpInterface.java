@@ -15,7 +15,7 @@ import javax.validation.constraints.*;
 public interface ConceptsApiControllerImpInterface {
     BeaconConceptWithDetails getConceptDetails(String conceptId) throws Exception;
 
-    List<BeaconConcept> getConcepts( @NotNull List<String> keywords, List<String> categories, Integer size) throws Exception;
+    List<BeaconConcept> getConcepts(List<String> keywords, List<String> categories, Integer offset, Integer size) throws Exception;
 
     List<ExactMatchResponse> getExactMatchesToConceptList( @NotNull List<String> c) throws Exception;
 

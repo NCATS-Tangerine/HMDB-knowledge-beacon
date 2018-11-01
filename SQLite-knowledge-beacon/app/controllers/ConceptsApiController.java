@@ -22,7 +22,7 @@ import play.Configuration;
 
 import swagger.SwaggerUtils.ApiAction;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-07-24T21:10:45.082Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-11-01T22:26:35.485Z")
 
 public class ConceptsApiController extends Controller {
 
@@ -51,9 +51,6 @@ public class ConceptsApiController extends Controller {
     @ApiAction
     public Result getConcepts() throws Exception {
         String[] keywordsArray = request().queryString().get("keywords");
-        if (keywordsArray == null) {
-            throw new IllegalArgumentException("'keywords' parameter is required");
-        }
         List<String> keywordsList = SwaggerUtils.parametersToList("multi", keywordsArray);
         List<String> keywords = new ArrayList<String>();
         for (String curParam : keywordsList) {
@@ -67,6 +64,13 @@ public class ConceptsApiController extends Controller {
             //noinspection UseBulkOperation
             categories.add(curParam);
         }
+        String valueoffset = request().getQueryString("offset");
+        Integer offset;
+        if (valueoffset != null) {
+            offset = Integer.parseInt(valueoffset);
+        } else {
+            offset = null;
+        }
         String valuesize = request().getQueryString("size");
         Integer size;
         if (valuesize != null) {
@@ -74,7 +78,7 @@ public class ConceptsApiController extends Controller {
         } else {
             size = null;
         }
-        List<BeaconConcept> obj = imp.getConcepts(keywords, categories, size);
+        List<BeaconConcept> obj = imp.getConcepts(keywords, categories, offset, size);
         if (configuration.getBoolean("useOutputBeanValidation")) {
             for (BeaconConcept curItem : obj) {
                 SwaggerUtils.validate(curItem);

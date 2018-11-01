@@ -21,7 +21,7 @@ import play.Configuration;
 
 import swagger.SwaggerUtils.ApiAction;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-07-24T21:10:45.082Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-11-01T22:26:35.485Z")
 
 public class StatementsApiController extends Controller {
 
@@ -46,6 +46,13 @@ public class StatementsApiController extends Controller {
             //noinspection UseBulkOperation
             keywords.add(curParam);
         }
+        String valueoffset = request().getQueryString("offset");
+        Integer offset;
+        if (valueoffset != null) {
+            offset = Integer.parseInt(valueoffset);
+        } else {
+            offset = null;
+        }
         String valuesize = request().getQueryString("size");
         Integer size;
         if (valuesize != null) {
@@ -53,7 +60,7 @@ public class StatementsApiController extends Controller {
         } else {
             size = null;
         }
-        BeaconStatementWithDetails obj = imp.getStatementDetails(statementId, keywords, size);
+        BeaconStatementWithDetails obj = imp.getStatementDetails(statementId, keywords, offset, size);
         if (configuration.getBoolean("useOutputBeanValidation")) {
             SwaggerUtils.validate(obj);
         }
@@ -64,14 +71,25 @@ public class StatementsApiController extends Controller {
     @ApiAction
     public Result getStatements() throws Exception {
         String[] sArray = request().queryString().get("s");
-        if (sArray == null) {
-            throw new IllegalArgumentException("'s' parameter is required");
-        }
         List<String> sList = SwaggerUtils.parametersToList("multi", sArray);
         List<String> s = new ArrayList<String>();
         for (String curParam : sList) {
             //noinspection UseBulkOperation
             s.add(curParam);
+        }
+        String[] sKeywordsArray = request().queryString().get("s_keywords");
+        List<String> sKeywordsList = SwaggerUtils.parametersToList("multi", sKeywordsArray);
+        List<String> sKeywords = new ArrayList<String>();
+        for (String curParam : sKeywordsList) {
+            //noinspection UseBulkOperation
+            sKeywords.add(curParam);
+        }
+        String[] sCategoriesArray = request().queryString().get("s_categories");
+        List<String> sCategoriesList = SwaggerUtils.parametersToList("multi", sCategoriesArray);
+        List<String> sCategories = new ArrayList<String>();
+        for (String curParam : sCategoriesList) {
+            //noinspection UseBulkOperation
+            sCategories.add(curParam);
         }
         String valueedgeLabel = request().getQueryString("edge_label");
         String edgeLabel;
@@ -94,19 +112,26 @@ public class StatementsApiController extends Controller {
             //noinspection UseBulkOperation
             t.add(curParam);
         }
-        String[] keywordsArray = request().queryString().get("keywords");
-        List<String> keywordsList = SwaggerUtils.parametersToList("multi", keywordsArray);
-        List<String> keywords = new ArrayList<String>();
-        for (String curParam : keywordsList) {
+        String[] tKeywordsArray = request().queryString().get("t_keywords");
+        List<String> tKeywordsList = SwaggerUtils.parametersToList("multi", tKeywordsArray);
+        List<String> tKeywords = new ArrayList<String>();
+        for (String curParam : tKeywordsList) {
             //noinspection UseBulkOperation
-            keywords.add(curParam);
+            tKeywords.add(curParam);
         }
-        String[] categoriesArray = request().queryString().get("categories");
-        List<String> categoriesList = SwaggerUtils.parametersToList("multi", categoriesArray);
-        List<String> categories = new ArrayList<String>();
-        for (String curParam : categoriesList) {
+        String[] tCategoriesArray = request().queryString().get("t_categories");
+        List<String> tCategoriesList = SwaggerUtils.parametersToList("multi", tCategoriesArray);
+        List<String> tCategories = new ArrayList<String>();
+        for (String curParam : tCategoriesList) {
             //noinspection UseBulkOperation
-            categories.add(curParam);
+            tCategories.add(curParam);
+        }
+        String valueoffset = request().getQueryString("offset");
+        Integer offset;
+        if (valueoffset != null) {
+            offset = Integer.parseInt(valueoffset);
+        } else {
+            offset = null;
         }
         String valuesize = request().getQueryString("size");
         Integer size;
@@ -115,7 +140,7 @@ public class StatementsApiController extends Controller {
         } else {
             size = null;
         }
-        List<BeaconStatement> obj = imp.getStatements(s, edgeLabel, relation, t, keywords, categories, size);
+        List<BeaconStatement> obj = imp.getStatements(s, sKeywords, sCategories, edgeLabel, relation, t, tKeywords, tCategories, offset, size);
         if (configuration.getBoolean("useOutputBeanValidation")) {
             for (BeaconStatement curItem : obj) {
                 SwaggerUtils.validate(curItem);

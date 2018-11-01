@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.FileInputStream;
 import javax.validation.constraints.*;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-07-24T21:10:45.082Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaPlayFrameworkCodegen", date = "2018-11-01T22:26:35.485Z")
 
 public class ConceptsApiControllerImp implements ConceptsApiControllerImpInterface {
     @Override
@@ -20,7 +20,7 @@ public class ConceptsApiControllerImp implements ConceptsApiControllerImpInterfa
     }
 
     @Override
-    public List<BeaconConcept> getConcepts( @NotNull List<String> keywords, List<String> categories, Integer size) throws Exception {
+    public List<BeaconConcept> getConcepts(List<String> keywords, List<String> categories, Integer offset, Integer size) throws Exception {
         //Do your magic!!!
         return new ArrayList<BeaconConcept>();
     }
