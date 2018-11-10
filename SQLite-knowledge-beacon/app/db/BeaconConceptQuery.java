@@ -70,7 +70,7 @@ public class BeaconConceptQuery {
 	}
 	
 	
-	private static ArrayList<Integer> conceptIds(List<String> keywords, List<String> categories, Integer size) 
+	private static ArrayList<Integer> conceptIds(List<String> keywords, List<String> categories, int offset, int size) 
 	throws SQLException, ClassNotFoundException {
 		Connection con = null;
 		try {
@@ -80,8 +80,10 @@ public class BeaconConceptQuery {
 			String sql = idSQL(keywords, categories);
 			ResultSet res = stmt.executeQuery(sql);
 			int i = 0;
-			while (res.next() && i < size) {
-				conceptIds.add(res.getInt("BEACON_CONCEPT_ID"));
+			while (res.next() && i < offset+Math.min(size,Integer.MAX_VALUE-offset)) {
+				if (i >= offset) {
+					conceptIds.add(res.getInt("BEACON_CONCEPT_ID"));
+				}
 				i = i + 1;
 			}
 			return conceptIds;
@@ -108,9 +110,9 @@ public class BeaconConceptQuery {
 	}
 	
 	
-	public static ArrayList<BeaconConcept> execute(List<String> keywords, List<String> categories, Integer size)
+	public static ArrayList<BeaconConcept> execute(List<String> keywords, List<String> categories, int offset, int size)
 	throws SQLException, ClassNotFoundException {
-		ArrayList<Integer> conceptIds = conceptIds(keywords, categories, size);
+		ArrayList<Integer> conceptIds = conceptIds(keywords, categories, offset, size);
 		ArrayList<BeaconConcept> concepts = new ArrayList<BeaconConcept>(conceptIds.size());
 		Connection con = null;
 		try {

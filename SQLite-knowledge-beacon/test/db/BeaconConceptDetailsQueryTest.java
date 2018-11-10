@@ -15,7 +15,7 @@ public class BeaconConceptDetailsQueryTest {
 	@Test
 	public void testSynonymsSql() throws Exception {
 		Connection c = DBconnection.getConnection();
-		assertEquals(9,BeaconConceptDetailsQuery.synonyms(1,c).size());
+		assertEquals(13,BeaconConceptDetailsQuery.synonyms(1,c).size());
 	}
 
 
@@ -28,9 +28,9 @@ public class BeaconConceptDetailsQueryTest {
 
 	@Test
 	public void testGetConcept() throws Exception {
-		String query = "hmdb:HMDB0000001";
+		String query = "HMDB:HMDB0000001";
 		BeaconConceptWithDetails concept = BeaconConceptDetailsQuery.getConceptWithDetails(query);
-		assertEquals(9,concept.getSynonyms().size());
+		assertEquals(13,concept.getSynonyms().size());
 		assertEquals(query,concept.getId());
 	}
 }

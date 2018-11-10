@@ -9,8 +9,8 @@
       "email" : "translator@broadinstitute.org"
     },
     "license" : {
-      "name" : "MIT License",
-      "url" : "http://opensource.org/licenses/MIT"
+      "name" : "www.hmdb.ca (license)",
+      "url" : "http://www.hmdb.ca/citing"
     }
   },
   "host" : "translator.ncats.io",

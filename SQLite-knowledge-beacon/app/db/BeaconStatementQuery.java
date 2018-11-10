@@ -24,21 +24,77 @@ public class BeaconStatementQuery {
 	}
 	
 	
-	private static String relationIdSQL(String relation) {
+	private static String relationIdSQL(String edgeLabel, String relation) {
 		String select = "SELECT DISTINCT BEACON_PREDICATE_ID FROM BEACON_PREDICATE";
-		return select + " WHERE RELATION = '" +relation+"'";
+		if (edgeLabel == null) {
+			return select + " WHERE RELATION = '" + relation + "'";
+		}
+		if (relation == null) {
+			return select + " WHERE EDGE_LABEL = '" + edgeLabel + "'";
+		}
+		return select + " WHERE RELATION = '" + relation + " AND EDGE_LABEL = '" + edgeLabel + "'";
+	}
+
+
+	private static String categoryIdSQL(List<String> categories) {
+		String select = "SELECT DISTINCT BEACON_CONCEPT_CATEGORY_ID FROM BEACON_CONCEPT_CATEGORY";
+		return select + " WHERE CATEGORY" + inS(categories);
 	}
 	
 
-	private static String categoryIdSQL(List<String> relations) {
-		String select = "SELECT DISTINCT BEACON_CONCEPT_CATEGORY_ID FROM BEACON_CONCEPT_CATEGORY";
-		return select + " WHERE CATEGORY" + inS(relations);
+	private static boolean hasKeywords(List<String> keywords) {
+		if (keywords == null || keywords.size()==0)
+			return false;
+		if (keywords.size()==1 && ("*".equals(keywords.get(0)) || keywords.get(0).length() == 0))
+			return false;
+		return true;
+	}
+	
+
+	private static String joinSynonyms(String subject, List<String> keywords) {
+		if (hasKeywords(keywords)) {
+			return "LEFT JOIN BEACON_CONCEPT_SYNONYM "+subject+"_SYNONYM "
+				 + "  ON "+subject+"_SYNONYM.BEACON_CONCEPT_ID = "+subject+".BEACON_CONCEPT_ID ";
+		}
+		return "";
 	}
 	
 	
-	private static String statementSQL(List<Integer> sourceIds, List<Integer> relationIds, List<Integer> targetIds, List<Integer> categoryIds){
+	private static String conceptClause(String subject, List<Integer> ids, List<String> keywords, List<Integer> categoryIds) {
+		String query = "";
+		if (ids != null && ids.size() > 0) {
+			query = subject+"_CONCEPT_ID" + inI(ids);
+		}
+		if (hasKeywords(keywords)) {
+			if (query.length() > 0) {
+				query += " AND " ;
+			}
+			StringBuffer sb = new StringBuffer("(");
+			for (int i = 0; i < keywords.size(); i++){
+				if (i > 0) sb.append(" OR ");
+				sb.append(subject+".ID LIKE '%"+keywords.get(i)+"%'");
+				sb.append(" OR "+subject+".NAME LIKE '%"+keywords.get(i)+"%'");
+				sb.append(" OR "+subject+"_SYNONYM.SYNONYM LIKE '%"+keywords.get(i)+"%'");
+			}
+			sb.append(")");
+			query += sb;
+		}
+		if (categoryIds != null && categoryIds.size() > 0) {
+			if (query.length() > 0) {
+				query += " AND " ;
+			}
+			query += subject+".BEACON_CONCEPT_CATEGORY_ID"+ inI(categoryIds);
+		}		
+		return query;
+	}
+	
+	
+	private static String statementSQL(
+			List<Integer> sourceIds, List<String> sKeywords, List<Integer> sCategoryIds,
+			List<Integer> relationIds, 
+			List<Integer> targetIds, List<String> tKeywords, List<Integer> tCategoryIds){
 		String select =
-		  "SELECT BEACON_STATEMENT.BEACON_STATEMENT_ID, BEACON_STATEMENT.SUBJECT_CONCEPT_ID, "
+		  "SELECT DISTINCT BEACON_STATEMENT.BEACON_STATEMENT_ID, BEACON_STATEMENT.SUBJECT_CONCEPT_ID, "
 		    + "BEACON_STATEMENT.BEACON_PREDICATE_ID, BEACON_STATEMENT.OBJECT_CONCEPT_ID, "
 			+ "BEACON_PREDICATE.EDGE_LABEL, BEACON_PREDICATE.RELATION, BEACON_STATEMENT.NEGATED, "
 			+ "OBJECT.ID AS OBJECT_ID, OBJECT.NAME AS OBJECT_NAME, OBJECT_CATEGORY.CATEGORY AS OBJECT_CATEGORY, "
@@ -53,24 +109,33 @@ public class BeaconStatementQuery {
     		+ "INNER JOIN BEACON_CONCEPT SUBJECT"
 		    + "  ON SUBJECT.BEACON_CONCEPT_ID=BEACON_STATEMENT.SUBJECT_CONCEPT_ID "
 		    + "INNER JOIN BEACON_CONCEPT_CATEGORY SUBJECT_CATEGORY "
-		    + "  ON SUBJECT_CATEGORY.BEACON_CONCEPT_CATEGORY_ID = SUBJECT.BEACON_CONCEPT_CATEGORY_ID";
+		    + "  ON SUBJECT_CATEGORY.BEACON_CONCEPT_CATEGORY_ID = SUBJECT.BEACON_CONCEPT_CATEGORY_ID "
+		    + joinSynonyms("SUBJECT", sKeywords)
+		    + joinSynonyms("OBJECT", tKeywords);
 
-		String relationClause = 
-				(relationIds == null) ? "" : " BEACON_PREDICATE.BEACON_PREDICATE_ID" + inI(relationIds)+" AND";
+		String whereClause = "";
 
-		String subjectClause = 
-				" ((SUBJECT_CONCEPT_ID" + inI(sourceIds) 
-				+ ((targetIds==null)?"":" AND OBJECT_CONCEPT_ID" + inI(targetIds))
-				+ ((categoryIds==null)?"":" AND OBJECT.BEACON_CONCEPT_CATEGORY_ID" + inI(categoryIds))+")";
+		String objectClause = conceptClause("SUBJECT", sourceIds, sKeywords, sCategoryIds);
+		if (objectClause.length() > 0) {
+			whereClause = " WHERE " + objectClause;
+		}
 
-		String objectClause = " (OBJECT_CONCEPT_ID" + inI(sourceIds) 
-				+ ((targetIds==null)?"":" AND SUBJECT_CONCEPT_ID" + inI(targetIds))
-				+ ((categoryIds==null)?"":" AND SUBJECT.BEACON_CONCEPT_CATEGORY_ID" + inI(categoryIds))+"))";
-		
-		return select + " WHERE" + relationClause + subjectClause + " OR " + objectClause;
+		if (relationIds != null) {
+			whereClause += (whereClause.length() == 0) ? " WHERE " : " AND ";
+			whereClause += " BEACON_PREDICATE.BEACON_PREDICATE_ID" + inI(relationIds);
+		}
+
+		String subjectClause = conceptClause("OBJECT", targetIds, tKeywords, tCategoryIds);
+		if (subjectClause.length() > 0) {
+			whereClause += (whereClause.length() == 0) ? " WHERE " : " AND ";
+			whereClause += subjectClause;
+		}
+
+		String orderBy = " ORDER BY BEACON_STATEMENT.BEACON_STATEMENT_ID";
+
+		return select + whereClause + orderBy;
 	}
 
-	
 	private static ArrayList<Integer> conceptIds(List<String> s, Connection con)
 	throws SQLException, ClassNotFoundException {
 		ArrayList<Integer> ids = new ArrayList<Integer>();
@@ -83,15 +148,24 @@ public class BeaconStatementQuery {
 	}
 	
 	
-	private static ArrayList<Integer> relationIds(String relation, Connection con)
+	private static ArrayList<Integer> relationIds(String edgeLabel, String relation, Connection con)
 	throws SQLException, ClassNotFoundException {
+		if (edgeLabel.equals("")) {
+			edgeLabel = null;
+		}
+		if (relation.equals("")) {
+			relation = null;
+		}
+		if (edgeLabel == null && relation == null) {
+			return null;
+		}
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		Statement stmt = con.createStatement();
-		ResultSet res = stmt.executeQuery(relationIdSQL(relation));
+		ResultSet res = stmt.executeQuery(relationIdSQL(edgeLabel, relation));
 		while (res.next()){
 			ids.add(res.getInt("BEACON_PREDICATE_ID"));
 		}
-		return ids;
+		return (ids.size() > 0)? ids : null;
 	}
 	
 	
@@ -132,25 +206,31 @@ public class BeaconStatementQuery {
 	}
 	
 	
-	public static ArrayList<BeaconStatement> execute(List<String> s, String relation, List<String> t, List<String> keywords, List<String> categories, Integer size)
+	public static ArrayList<BeaconStatement> execute(
+			List<String> s, List<String> sKeywords, List<String> sCategories, 
+			String edgeLabel, String relation, 
+			List<String> t, List<String> tKeywords, List<String> tCategories, 
+			int offset, int size)
 	throws SQLException, ClassNotFoundException {
 		Connection con = null;
 		try {
 			con = DBconnection.getConnection();
-			ArrayList<Integer> sourceIds = conceptIds(s, con);
+
 			ArrayList<BeaconStatement> list = new ArrayList<BeaconStatement>();
-			if (sourceIds.size() == 0) {
-				return list;
-			}
-			ArrayList<Integer> relationIds = (relation == null || relation.equals("")) ? null : relationIds(relation, con);
+
+			ArrayList<Integer> relationIds = (relation == null || relation.equals("")) ? null : relationIds(edgeLabel, relation, con);
+			ArrayList<Integer> sourceIds = (s == null || s.size() == 0) ? null : conceptIds(s, con);
 			ArrayList<Integer> targetIds = (t == null || t.size() == 0) ? null : conceptIds(t, con);
-			ArrayList<Integer> categoryIds = (categories == null || categories.size() == 0) ? null : categoryIds(categories, con);
+			ArrayList<Integer> sCategoryIds = (sCategories == null || sCategories.size() == 0) ? null : categoryIds(sCategories, con);
+			ArrayList<Integer> tCategoryIds = (tCategories == null || tCategories.size() == 0) ? null : categoryIds(tCategories, con);
 
 			Statement stmt = con.createStatement();
-			ResultSet res = stmt.executeQuery(statementSQL(sourceIds, relationIds, targetIds, categoryIds));
+			ResultSet res = stmt.executeQuery(statementSQL(sourceIds, sKeywords, sCategoryIds, relationIds, targetIds, tKeywords, tCategoryIds));
 			int i = 0;
-			while (res.next() && i < size) {
-				list.add(getStatement(res));
+			while (res.next() && i < offset+Math.min(size,Integer.MAX_VALUE-offset)) {
+				if (i >= offset) {
+					list.add(getStatement(res));
+				}
 				i = i + 1;
 			}
 			stmt.close();

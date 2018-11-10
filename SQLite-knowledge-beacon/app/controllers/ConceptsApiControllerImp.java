@@ -20,7 +20,7 @@ public class ConceptsApiControllerImp implements ConceptsApiControllerImpInterfa
 
     @Override
     public List<BeaconConcept> getConcepts(List<String> keywords, List<String> categories, Integer offset, Integer size) throws Exception {
-        return BeaconConceptQuery.execute(keywords, categories, size==null?Integer.MAX_VALUE:size);
+        return BeaconConceptQuery.execute(keywords, categories, offset==null?0:offset, size==null?Integer.MAX_VALUE:size);
     }
 
     @Override

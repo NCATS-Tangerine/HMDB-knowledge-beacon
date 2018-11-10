@@ -43,7 +43,8 @@ public class BeaconStatementDetailsQuery {
 				+ "FROM BEACON_STATEMENT_CITATION "
 				+ "INNER JOIN BEACON_REFERENCE"
 				+ "  ON BEACON_REFERENCE.BEACON_REFERENCE_ID = BEACON_STATEMENT_CITATION.BEACON_REFERENCE_ID "
-				+ "WHERE BEACON_STATEMENT_CITATION.BEACON_STATEMENT_ID = "+statementId+keywordClause(keywords);
+				+ "WHERE BEACON_STATEMENT_CITATION.BEACON_STATEMENT_ID = "+statementId+keywordClause(keywords)
+				+ " ORDER BY BEACON_STATEMENT_CITATION_ID";
 	}
 	
 	private static String keywordClause( List<String> keywords){
@@ -85,26 +86,28 @@ public class BeaconStatementDetailsQuery {
 		return annotations;
 	}
 	
-	private static List<BeaconStatementCitation> getCitations(int statementId, List<String> keywords, Integer size, Connection con) throws SQLException {
+	private static List<BeaconStatementCitation> getCitations(int statementId, List<String> keywords, int offset, int size, Connection con) throws SQLException {
 		ArrayList<BeaconStatementCitation> citations = new ArrayList<BeaconStatementCitation>();
 		Statement stmt = con.createStatement();
 		ResultSet res = stmt.executeQuery(citationSQL(statementId, keywords));
 		int i = 0;
-		while(res.next() && i < size){
-			BeaconStatementCitation citation = new BeaconStatementCitation();
-			citation.setId(res.getString("ID"));
-			citation.setUri(res.getString("URI"));
-			citation.setName(res.getString("NAME"));
-			citation.setEvidenceType(res.getString("EVIDENCE_TYPE"));
-			citation.setDate(res.getString("DATE"));
-			citations.add(citation);
+		while(res.next() && i < offset+Math.min(size,Integer.MAX_VALUE-offset)){
+			if (i >= offset) {
+				BeaconStatementCitation citation = new BeaconStatementCitation();
+				citation.setId(res.getString("ID"));
+				citation.setUri(res.getString("URI"));
+				citation.setName(res.getString("NAME"));
+				citation.setEvidenceType(res.getString("EVIDENCE_TYPE"));
+				citation.setDate(res.getString("DATE"));
+				citations.add(citation);
+			}
 			i = i + 1;
 		}
 		stmt.close();
 		return citations;
 	}
 	
-	public static BeaconStatementWithDetails execute(String statementId, List<String> keywords, Integer size)
+	public static BeaconStatementWithDetails execute(String statementId, List<String> keywords, int offset, int size)
 	throws SQLException, ClassNotFoundException {
 		Connection con = null;
 		try {
@@ -121,7 +124,7 @@ public class BeaconStatementDetailsQuery {
 					int beaconStatementId = res.getInt("BEACON_STATEMENT_ID");
 					details.setQualifiers(getQualifiers(beaconStatementId, con));
 					details.setAnnotation(getAnnotations(beaconStatementId, con));
-					details.setEvidence(getCitations(beaconStatementId, keywords, size, con));
+					details.setEvidence(getCitations(beaconStatementId, keywords, offset, size, con));
 				}
 				stmt.close();
 			} catch (NumberFormatException e){
