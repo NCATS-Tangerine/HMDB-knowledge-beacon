@@ -14,10 +14,10 @@ public class BeaconConceptCategoryQueryTest {
 	public void testCategories() throws Exception {
 
 		ArrayList<BeaconConceptCategory> list = BeaconConceptCategoryQuery.execute();
-		assertEquals(6, list.size());
+		assertEquals(7, list.size());
 		assertEquals("metabolite",list.get(0).getCategory());
 		assertEquals("disease",list.get(1).getCategory());
 		assertEquals("pathway",list.get(2).getCategory());
-		assertEquals("protein",list.get(5).getCategory());		
+		assertEquals("protein",list.get(6).getCategory());		
 	}
 }
